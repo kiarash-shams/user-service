@@ -1,0 +1,2 @@
+{"level":"info","ts":"2024-10-12T14:17:02.796+0330","caller":"db/postgress.go:41","msg":"Db connection established","AppName":"MyApp","LoggerName":"Zaplog","Category":"Postgres","SubCategory":"Startup"}
+{"level":"fatal","ts":"2024-10-12T14:17:02.862+0330","caller":"cmd/main.go:47","msg":"vault address is not set in the configuration","AppName":"MyApp","LoggerName":"Zaplog","SubCategory":"Startup","Category":"Vault","stacktrace":"main.main\n\tD:/Golang Project/user-service/src/cmd/main.go:47\nruntime.main\n\tC:/Program Files/Go/src/runtime/proc.go:272"}

@@ -1,0 +1,46 @@
+server:
+  internalPort: 5010
+  externalPort: 5010
+  runMode: release
+logger:
+  filePath: logs/
+  encoding: json
+  level: debug
+  logger: zap
+cors:
+  allowOrigins: "*"
+postgres:
+  host: localhost
+  port: 5433
+  user: postgres
+  password: admin
+  dbName: user_service
+  sslMode: disable
+  maxIdleConns: 15
+  maxOpenConns: 100
+  connMaxLifetime: 5
+redis:
+  host: localhost
+  port: 6379
+  password: password
+  db: 0
+  dialTimeout: 5
+  readTimeout: 5
+  writeTimeout: 5
+  poolSize: 10
+  poolTimeout: 15
+  idleCheckFrequency: 500
+otp:
+  expireTime: 120
+  digits: 6
+  limiter: 100
+jwt:
+  secret: "mySecretKey"
+  refreshSecret: "mySecretKey"
+  accessTokenExpireDuration: 60
+  refreshTokenExpireDuration: 60
+rabbitMQ:
+  url: "amqp://user:password@localhost:5672/"
+  queues:
+    - "emailQueue"
+    - "smsQueue"

@@ -1,0 +1,2 @@
+{"level":"info","ts":"2024-10-10T17:04:19.483+0330","caller":"db/postgress.go:41","msg":"Db connection established","AppName":"MyApp","LoggerName":"Zaplog","Category":"Postgres","SubCategory":"Startup"}
+{"level":"info","ts":"2024-10-10T17:04:19.698+0330","caller":"migration/1_Init.go:47","msg":"tables created","AppName":"MyApp","LoggerName":"Zaplog","Category":"Postgres","SubCategory":"Migration"}

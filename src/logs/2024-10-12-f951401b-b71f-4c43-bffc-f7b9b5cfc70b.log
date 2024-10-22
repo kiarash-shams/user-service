@@ -1,0 +1,2 @@
+{"level":"info","ts":"2024-10-12T13:17:34.286+0330","caller":"db/postgress.go:41","msg":"Db connection established","AppName":"MyApp","LoggerName":"Zaplog","Category":"Postgres","SubCategory":"Startup"}
+{"level":"fatal","ts":"2024-10-12T13:17:34.304+0330","caller":"cmd/main.go:41","msg":"failed to connect to RabbitMQ: Exception (501) Reason: \"EOF\"","AppName":"MyApp","LoggerName":"Zaplog","Category":"Postgres","SubCategory":"Startup","stacktrace":"main.main\n\tD:/Golang Project/user-service/src/cmd/main.go:41\nruntime.main\n\tC:/Program Files/Go/src/runtime/proc.go:272"}

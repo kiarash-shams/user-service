@@ -1,0 +1,116 @@
+version: '3.7'
+
+services:
+####################### Vault #######################
+  vault:
+    image: vault:1.13.2
+    container_name: vault
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "root-token"
+      VAULT_API_ADDR: "http://localhost:8201"
+      VAULT_LOCAL_CONFIG: |
+        {
+          "backend": {
+            "file": {
+              "path": "/vault/file"
+            }
+          },
+          "listener": [{
+            "tcp": {
+              "address": "0.0.0.0:8201",
+              "tls_disable": 1
+            }
+          }],
+          "default_lease_ttl": "168h",
+          "max_lease_ttl": "720h"
+        }
+    ports:
+      - "8201:8201"
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./vault/data:/vault/file
+  ####################### RabbitMQ #######################
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # RabbitMQ messaging port
+      - "15672:15672"   # RabbitMQ management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  ####################### POSTGRES | PGADMIN #######################
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: user_service
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - webapi_network
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: kiarash.sh72@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8090:80"
+    networks:
+      - webapi_network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  ####################### REDIS #######################
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
+    volumes:
+      - /redis/redis.conf:/etc/redis/redis.conf
+      - redis:/etc/redis
+    ports:
+      - "6379:6379"
+    networks:
+      - webapi_network
+
+  redis-commander:
+    image: rediscommander/redis-commander
+    container_name: redis_commander
+    environment:
+      - REDIS_HOSTS=local:redis_container:6379
+    ports:
+      - "8081:8081"
+    networks:
+      - webapi_network
+    depends_on:
+      - redis
+####################### VOLUME AND NETWORKS #######################
+volumes:
+  postgres:
+  pgadmin:
+  redis:
+  logs:
+  rabbitmq_data:
+  vault:
+ 
+ 
+
+networks:
+  webapi_network:
+    driver: bridge

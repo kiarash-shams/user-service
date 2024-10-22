@@ -1,0 +1,883 @@
+definitions:
+  user-service_api_dto.CreateLabelRequest:
+    properties:
+      description:
+        maxLength: 255
+        type: string
+      key:
+        maxLength: 255
+        minLength: 3
+        type: string
+      scope:
+        maxLength: 255
+        minLength: 3
+        type: string
+      value:
+        maxLength: 255
+        minLength: 3
+        type: string
+    required:
+    - description
+    - key
+    - value
+    type: object
+  user-service_api_dto.CreateLocationRequest:
+    properties:
+      address:
+        maxLength: 255
+        type: string
+      city:
+        maxLength: 50
+        type: string
+      country:
+        maxLength: 50
+        type: string
+      metadata:
+        maxLength: 255
+        type: string
+      postalCode:
+        maxLength: 10
+        type: string
+      staticPhoneNumber:
+        maxLength: 20
+        type: string
+    type: object
+  user-service_api_dto.CreatePhoneRequest:
+    properties:
+      country:
+        maxLength: 11
+        minLength: 3
+        type: string
+      mobileNumber:
+        maxLength: 11
+        minLength: 11
+        type: string
+    required:
+    - mobileNumber
+    type: object
+  user-service_api_dto.CreateProfileRequest:
+    properties:
+      dob:
+        maxLength: 255
+        type: string
+      fatherName:
+        maxLength: 255
+        minLength: 3
+        type: string
+      firstName:
+        maxLength: 255
+        minLength: 3
+        type: string
+      lastName:
+        maxLength: 255
+        minLength: 3
+        type: string
+      metadata:
+        maxLength: 255
+        type: string
+      nid:
+        maxLength: 11
+        minLength: 3
+        type: string
+    required:
+    - dob
+    - firstName
+    - lastName
+    - nid
+    type: object
+  user-service_api_dto.DocumentResponse:
+    properties:
+      description:
+        type: string
+      directory:
+        type: string
+      docCategory:
+        type: string
+      id:
+        type: integer
+      mimeType:
+        type: string
+      name:
+        type: string
+    type: object
+  user-service_api_dto.LabelResponse:
+    properties:
+      description:
+        type: string
+      key:
+        type: string
+      scope:
+        type: string
+      value:
+        type: string
+    type: object
+  user-service_api_dto.LocationResponse:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      metadata:
+        type: string
+      postalCode:
+        type: string
+      staticPhoneNumber:
+        type: string
+      verification:
+        type: string
+    type: object
+  user-service_api_dto.LoginByUsernameRequest:
+    properties:
+      email:
+        minLength: 6
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  user-service_api_dto.PhoneResponse:
+    properties:
+      mobileNumber:
+        type: string
+    type: object
+  user-service_api_dto.ProfileResponse:
+    properties:
+      dob:
+        type: string
+      fatherName:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      metadata:
+        type: string
+      nid:
+        type: string
+      verification:
+        type: string
+    type: object
+  user-service_api_dto.RegisterUserByUsernameRequest:
+    properties:
+      email:
+        minLength: 6
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - password
+    type: object
+  user-service_api_dto.UpdateLabelRequest:
+    properties:
+      description:
+        maxLength: 255
+        type: string
+      key:
+        maxLength: 255
+        minLength: 3
+        type: string
+      value:
+        maxLength: 255
+        minLength: 3
+        type: string
+    type: object
+  user-service_api_dto.UpdateLocationRequest:
+    properties:
+      address:
+        maxLength: 255
+        type: string
+      city:
+        maxLength: 50
+        type: string
+      country:
+        maxLength: 50
+        type: string
+      metadata:
+        maxLength: 255
+        type: string
+      postalCode:
+        maxLength: 10
+        type: string
+      staticPhoneNumber:
+        maxLength: 20
+        type: string
+    type: object
+  user-service_api_dto.UpdatePhoneRequest:
+    properties:
+      country:
+        maxLength: 11
+        minLength: 3
+        type: string
+      mobileNumber:
+        maxLength: 11
+        minLength: 11
+        type: string
+    required:
+    - mobileNumber
+    type: object
+  user-service_api_dto.UpdateProfileRequest:
+    properties:
+      dob:
+        maxLength: 255
+        type: string
+      fatherName:
+        maxLength: 255
+        minLength: 3
+        type: string
+      firstName:
+        maxLength: 255
+        minLength: 3
+        type: string
+      lastName:
+        maxLength: 255
+        minLength: 3
+        type: string
+      metadata:
+        maxLength: 255
+        type: string
+      nid:
+        maxLength: 11
+        minLength: 3
+        type: string
+    type: object
+  user-service_api_helper.BaseHttpResponse:
+    properties:
+      error: {}
+      result: {}
+      resultCode:
+        $ref: '#/definitions/user-service_api_helper.ResultCode'
+      success:
+        type: boolean
+      validationErrors:
+        items:
+          $ref: '#/definitions/user-service_api_validation.ValidationError'
+        type: array
+    type: object
+  user-service_api_helper.ResultCode:
+    enum:
+    - 0
+    - 40001
+    - 40101
+    - 40301
+    - 40401
+    - 42901
+    - 42902
+    - 50001
+    - 50002
+    type: integer
+    x-enum-varnames:
+    - Success
+    - ValidationError
+    - AuthError
+    - ForbiddenError
+    - NotFoundError
+    - LimiterError
+    - OtpLimiterError
+    - CustomRecovery
+    - InternalError
+  user-service_api_validation.ValidationError:
+    properties:
+      message:
+        type: string
+      property:
+        type: string
+      tag:
+        type: string
+      value:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v2/auth/identity/users/login:
+    post:
+      consumes:
+      - application/json
+      description: LoginByEmail
+      parameters:
+      - description: LoginByUsernameRequest
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.LoginByUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "409":
+          description: Failed
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      summary: LoginByEmail
+      tags:
+      - Identity
+  /v2/auth/identity/users/register:
+    post:
+      consumes:
+      - application/json
+      description: RegisterByEmail
+      parameters:
+      - description: RegisterUserByUsernameRequest
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.RegisterUserByUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "409":
+          description: Failed
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      summary: RegisterByEmail
+      tags:
+      - Identity
+  /v2/auth/public/health/:
+    get:
+      consumes:
+      - application/json
+      description: Health Check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      summary: Health Check
+      tags:
+      - Public
+  /v2/auth/public/time/:
+    get:
+      consumes:
+      - application/json
+      description: Auth Server Current Unix Timestamp
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      summary: Get Server Current Unix Timestamp
+      tags:
+      - Public
+  /v2/auth/public/version/:
+    get:
+      consumes:
+      - application/json
+      description: Auth Version
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      summary: Get Auth Version
+      tags:
+      - Public
+  /v2/auth/resource/documents/:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Create a Document
+      parameters:
+      - in: formData
+        name: description
+        required: true
+        type: string
+      - in: formData
+        name: docCategory
+        required: true
+        type: string
+      - description: Create a file
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "201":
+          description: Document response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.DocumentResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a Document
+      tags:
+      - Documents
+  /v2/auth/resource/documents/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a Document
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Document response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.DocumentResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a Document
+      tags:
+      - Documents
+  /v2/auth/resource/labels:
+    post:
+      consumes:
+      - application/json
+      description: Create a Label
+      parameters:
+      - description: Create a Label
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.CreateLabelRequest'
+      responses:
+        "201":
+          description: Label response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.LabelResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a Label
+      tags:
+      - Labels
+  /v2/auth/resource/labels/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all labels associated with the current user.
+      responses:
+        "200":
+          description: List of Labels
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/user-service_api_dto.LabelResponse'
+                  type: array
+              type: object
+        "404":
+          description: 'Not found: No labels found'
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: List all Labels for the current user
+      tags:
+      - Labels
+  /v2/auth/resource/labels/{key}:
+    delete:
+      description: 'Delete a Label. This operation is allowed only for labels with
+        Scope: public.'
+      parameters:
+      - description: Label Key
+        in: path
+        name: key
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Label deleted successfully
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "403":
+          description: 'Forbidden: Label scope is not public'
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "404":
+          description: 'Not found: Label not found or already deleted'
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a Label
+      tags:
+      - Labels
+    get:
+      description: 'Retrieve a Label by its Key. This operation is allowed for labels
+        with Scope: public or private.'
+      parameters:
+      - description: Label Key
+        in: path
+        name: key
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Label response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.LabelResponse'
+              type: object
+        "403":
+          description: 'Forbidden: Label not found or scope is not accessible'
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "404":
+          description: 'Not found: Label not found or already deleted'
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a Label by Key
+      tags:
+      - Labels
+    put:
+      consumes:
+      - application/json
+      description: 'Update a Label. This operation is allowed only for labels with
+        Scope: public.'
+      parameters:
+      - description: Label Key
+        in: path
+        name: key
+        required: true
+        type: string
+      - description: Update a Label
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.UpdateLabelRequest'
+      responses:
+        "200":
+          description: Label response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.LabelResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+        "403":
+          description: 'Forbidden: Label scope is not public'
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a Label
+      tags:
+      - Labels
+  /v2/auth/resource/locations/:
+    get:
+      consumes:
+      - application/json
+      description: Get a Location
+      responses:
+        "200":
+          description: Location response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.LocationResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a Location
+      tags:
+      - Locations
+    post:
+      consumes:
+      - application/json
+      description: Create a Location
+      parameters:
+      - description: Create a Location
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.CreateLocationRequest'
+      responses:
+        "201":
+          description: Location response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.LocationResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a Location
+      tags:
+      - Locations
+    put:
+      consumes:
+      - application/json
+      description: Update a Location
+      parameters:
+      - description: Update a Location
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.UpdateLocationRequest'
+      responses:
+        "201":
+          description: Location response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.LocationResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a Location
+      tags:
+      - Locations
+  /v2/auth/resource/phones/:
+    post:
+      consumes:
+      - application/json
+      description: Create a Phone
+      parameters:
+      - description: Create a Phone
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.CreatePhoneRequest'
+      responses:
+        "201":
+          description: Phone response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.PhoneResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a Phone
+      tags:
+      - Phones
+    put:
+      consumes:
+      - application/json
+      description: Update a Phone
+      parameters:
+      - description: Update a Phone
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.UpdatePhoneRequest'
+      responses:
+        "201":
+          description: Phone response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.PhoneResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a Phone
+      tags:
+      - Phones
+  /v2/auth/resource/profiles/:
+    post:
+      consumes:
+      - application/json
+      description: Create a Profile
+      parameters:
+      - description: Create a Profile
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.CreateProfileRequest'
+      responses:
+        "201":
+          description: Profile response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.ProfileResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a Profile
+      tags:
+      - Profiles
+    put:
+      consumes:
+      - application/json
+      description: Update a Profile
+      parameters:
+      - description: Update a Profile
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/user-service_api_dto.UpdateProfileRequest'
+      responses:
+        "201":
+          description: Profile response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.ProfileResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a Profile
+      tags:
+      - Profiles
+  /v2/auth/resource/profiles/me:
+    get:
+      consumes:
+      - application/json
+      description: Get a Profile
+      responses:
+        "200":
+          description: Profile response
+          schema:
+            allOf:
+            - $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/user-service_api_dto.ProfileResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/user-service_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a Profile
+      tags:
+      - Profiles
+securityDefinitions:
+  AuthBearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

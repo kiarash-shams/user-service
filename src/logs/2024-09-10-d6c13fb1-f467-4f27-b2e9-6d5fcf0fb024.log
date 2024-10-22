@@ -1,0 +1,1 @@
+{"level":"info","ts":"2024-09-10T19:35:23.385+0330","caller":"db/postgress.go:41","msg":"Db connection established","AppName":"MyApp","LoggerName":"Zaplog","Category":"Postgres","SubCategory":"Startup"}
