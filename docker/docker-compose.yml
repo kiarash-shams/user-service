@@ -1,7 +1,5 @@
-version: '3.7'
-
 services:
-####################### Vault #######################
+  ####################### Vault #######################
   vault:
     image: vault:1.13.2
     container_name: vault
@@ -30,6 +28,7 @@ services:
       - IPC_LOCK
     volumes:
       - ./vault/data:/vault/file
+  
   ####################### RabbitMQ #######################
   rabbitmq:
     image: rabbitmq:3-management

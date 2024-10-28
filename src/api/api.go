@@ -1,9 +1,10 @@
 package api
 
 import (
-
 	"fmt"
 	"log"
+	// "log"
+	// "net/http"
 	"time"
 	"user-service/api/middleware"
 	"user-service/api/routers"
@@ -52,68 +53,23 @@ func InitServer(cfg *config.Config) {
 
     // Example: Queue a notification
     notification := &services.Notification{
-        Type:      "sms",
+        Type:      "email",
         Recipient: "+1234567890",
         Message:   "Hello, World!",
         CreatedAt: time.Now(),
         Status:    "pending",
     }
+
+	
+	
+
     if err := producer.QueueNotification(notification); err != nil {
         log.Printf("Failed to queue notification: %v", err)
     }
 
     // Keep the application running
     select {}
-
-
-    // rabbitMQURL := "amqp://user:password@localhost:5672/"
-    // queues := []string{"sms_queue", "delayed_email_queue", "default_queue"}
-
-    // rabbitMQ, err := services.NewRabbitMQService(rabbitMQURL, queues)
-    // if err != nil {
-    //     log.Fatalf("Error initializing RabbitMQ service: %v", err)
-    // }
-    // defer rabbitMQ.Close()
-
-	// //  Create NotificationService
-	//  notificationService := services.NewNotificationService(rabbitMQ)
-
-	//  // Setup consumers
-	//  err = notificationService.SetupConsumers()
-	//  if err != nil {
-	// 	 log.Fatalf("Failed to setup consumers: %v", err)
-	//  }
-
-	//  r.POST("/send-notification", func(c *gin.Context) {
-    //     var notification services.Notification
-    //     if err := c.ShouldBindJSON(&notification); err != nil {
-    //         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-    //         return
-    //     }
-
-    //     err := notificationService.SendNotification(&notification)
-    //     if err != nil {
-    //         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send notification", "status": notification.Status})
-    //         return
-    //     }
-
-    //     c.JSON(http.StatusOK, gin.H{
-    //         "status":     notification.Status,
-    //         "recipient":  notification.Recipient,
-    //         "type":       notification.Type,
-    //         "created_at": notification.CreatedAt,
-    //     })
-    // })
-
- // Initialize RabbitMQ
-//  rabbitMQ, err := NewRabbitMQService("amqp://guest:guest@localhost:5672/", []string{"sms_queue", "delayed_email_queue", "default_queue"})
-//  if err != nil {
-// 	 log.Fatalf("Failed to initialize RabbitMQ: %v", err)
-//  }
-//  defer rabbitMQ.Close()
-
-
-
+// ---------------------------------------------------------------------------------
 
 	
 
@@ -163,10 +119,6 @@ func InitServer(cfg *config.Config) {
     // })
 
 
-
-
-
-	
 
 	RegisterValidators()
 	// RegisterPrometheus()

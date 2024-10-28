@@ -4,7 +4,6 @@ import (
     "fmt"
     "log"
     "user-service/config"
-
     "github.com/streadway/amqp"
 )
 
