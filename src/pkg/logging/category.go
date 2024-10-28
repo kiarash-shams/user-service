@@ -9,13 +9,21 @@ const (
 	IO              Category = "IO"
 	Internal        Category = "Internal"
 	Postgres        Category = "Postgres"
-	RabbitMQ        Category = "Postgres"
 	Vault        	Category = "Vault"
 	Redis           Category = "Redis"
 	Validation      Category = "Validation"
 	RequestResponse Category = "RequestResponse"
 	Prometheus      Category = "Prometheus"
 	Decrypt      	Category = "Decrypt"
+	RabbitMQ 		Category = "RabbitMQ"
+)
+
+const (
+    PublishMessage   SubCategory = "PublishMessage"
+    ConsumeMessage    SubCategory = "ConsumeMessage"
+    ConnectionError   SubCategory = "ConnectionError"
+    MessageProcessing SubCategory = "MessageProcessing"
+    QueueError        SubCategory = "QueueError"
 )
 
 const (

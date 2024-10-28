@@ -3,27 +3,30 @@ package services
 import (
     "encoding/json"
     "fmt"
-    "log"
-
+	"user-service/pkg/logging"
     "github.com/streadway/amqp"
+  
 )
 
 // RabbitMQService struct to hold connection and channels
 type RabbitMQService struct {
     Connection *amqp.Connection
     Channels   map[string]*amqp.Channel
+    logger     logging.Logger // Added logger for logging purposes
 }
 
 // NewRabbitMQService initializes the RabbitMQ connection and declares fixed channels
-func NewRabbitMQService(url string) (*RabbitMQService, error) {
+func NewRabbitMQService(url string, logger logging.Logger) (*RabbitMQService, error) {
     conn, err := amqp.Dial(url)
     if err != nil {
+        logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to connect to RabbitMQ: %v", err), nil)
         return nil, fmt.Errorf("failed to connect to RabbitMQ: %w", err)
     }
 
     service := &RabbitMQService{
         Connection: conn,
         Channels:   make(map[string]*amqp.Channel),
+        logger:     logger, // Use the provided logger
     }
 
     // Define the queues we need
@@ -34,6 +37,7 @@ func NewRabbitMQService(url string) (*RabbitMQService, error) {
         ch, err := conn.Channel()
         if err != nil {
             conn.Close()
+            logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to open a channel for queue '%s': %v", queueName, err), nil)
             return nil, fmt.Errorf("failed to open a channel for queue '%s': %w", queueName, err)
         }
 
@@ -48,11 +52,12 @@ func NewRabbitMQService(url string) (*RabbitMQService, error) {
         if err != nil {
             ch.Close()
             conn.Close()
+            logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to declare queue '%s': %v", queueName, err), nil)
             return nil, fmt.Errorf("failed to declare queue '%s': %w", queueName, err)
         }
 
         service.Channels[queueName] = ch
-        log.Printf("Channel created for queue: %s", queueName)
+        logger.Info(logging.RabbitMQ, logging.Startup, fmt.Sprintf("Channel created for queue: %s", queueName), nil)
     }
 
     return service, nil
@@ -67,6 +72,7 @@ func (rmq *RabbitMQService) PublishMessage(queueName string, message interface{}
 
     body, err := json.Marshal(message)
     if err != nil {
+        rmq.logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to marshal message: %v", err), nil)
         return fmt.Errorf("failed to marshal message: %w", err)
     }
 
@@ -82,10 +88,11 @@ func (rmq *RabbitMQService) PublishMessage(queueName string, message interface{}
         },
     )
     if err != nil {
+        rmq.logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to publish a message to queue '%s': %v", queueName, err), nil)
         return fmt.Errorf("failed to publish a message to queue '%s': %w", queueName, err)
     }
 
-    log.Printf("Message published to queue: %s", queueName)
+    rmq.logger.Info(logging.RabbitMQ, logging.Startup, fmt.Sprintf("Message published to queue: %s", queueName), nil)
     return nil
 }
 
@@ -106,17 +113,18 @@ func (rmq *RabbitMQService) ConsumeMessages(queueName string, handler func([]byt
         nil,       // args
     )
     if err != nil {
+        rmq.logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to register a consumer for queue '%s': %v", queueName, err), nil)
         return fmt.Errorf("failed to register a consumer for queue '%s': %w", queueName, err)
     }
 
     go func() {
         for d := range msgs {
-            handler(d.Body)
-            d.Ack(false) // manually acknowledge the message after processing
+            handler(d.Body) // Process the message
+            d.Ack(false)    // Manually acknowledge the message after processing
         }
     }()
 
-    log.Printf("Consuming messages from queue: %s", queueName)
+    rmq.logger.Info(logging.RabbitMQ, logging.Startup, fmt.Sprintf("Consuming messages from queue: %s", queueName), nil)
     return nil
 }
 
@@ -124,10 +132,10 @@ func (rmq *RabbitMQService) ConsumeMessages(queueName string, handler func([]byt
 func (rmq *RabbitMQService) Close() {
     for _, ch := range rmq.Channels {
         if err := ch.Close(); err != nil {
-            log.Printf("failed to close channel: %v", err)
+            rmq.logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to close channel: %v", err), nil)
         }
     }
     if err := rmq.Connection.Close(); err != nil {
-        log.Printf("failed to close connection: %v", err)
+        rmq.logger.Error(logging.RabbitMQ, logging.ExternalService, fmt.Sprintf("Failed to close connection: %v", err), nil)
     }
 }

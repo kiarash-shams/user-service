@@ -2,7 +2,9 @@ package api
 
 import (
 	"fmt"
-	"log"
+	// "log"
+	"net/http"
+
 	// "log"
 	// "net/http"
 	"time"
@@ -14,6 +16,7 @@ import (
 	"user-service/pkg/logging"
 	"user-service/pkg/metrics"
 	"user-service/services"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -26,49 +29,49 @@ import (
 
 var logger = logging.NewLogger(config.GetConfig())
 
-func InitServer(cfg *config.Config) {
+func InitServer(cfg *config.Config, producer *services.NotificationProducer) {
 
 	gin.SetMode(cfg.Server.RunMode)
 	r := gin.New()
 
 	
-    rabbitmqService, err := services.NewRabbitMQService("amqp://user:password@localhost:5672/")
-    if err != nil {
-        log.Fatalf("Failed to initialize RabbitMQ service: %v", err)
-    }
-    defer rabbitmqService.Close()
+    // rabbitmqService, err := services.NewRabbitMQService("amqp://user:password@localhost:5672/")
+    // if err != nil {
+    //     log.Fatalf("Failed to initialize RabbitMQ service: %v", err)
+    // }
+    // defer rabbitmqService.Close()
 
-    producer := services.NewNotificationProducer(rabbitmqService)
+    // producer := services.NewNotificationProducer(rabbitmqService)
 
-    // Create and start consumers
-    consumers := []string{"sms", "email", "webhook"}
-    for _, consumerType := range consumers {
-        consumer := services.NewNotificationConsumer(rabbitmqService, consumerType)
-        go func() {
-            if err := consumer.Start(); err != nil {
-                log.Printf("Failed to start %s consumer: %v", consumerType, err)
-            }
-        }()
-    }
+    // // Create and start consumers
+    // consumers := []string{"sms", "email", "webhook"}
+    // for _, consumerType := range consumers {
+    //     consumer := services.NewNotificationConsumer(rabbitmqService, consumerType)
+    //     go func() {
+    //         if err := consumer.Start(); err != nil {
+    //             log.Printf("Failed to start %s consumer: %v", consumerType, err)
+    //         }
+    //     }()
+    // }
 
-    // Example: Queue a notification
-    notification := &services.Notification{
-        Type:      "email",
-        Recipient: "+1234567890",
-        Message:   "Hello, World!",
-        CreatedAt: time.Now(),
-        Status:    "pending",
-    }
+    // // Example: Queue a notification
+    // notification := &services.Notification{
+    //     Type:      "email",
+    //     Recipient: "+1234567890",
+    //     Message:   "Hello, World!",
+    //     CreatedAt: time.Now(),
+    //     Status:    "pending",
+    // }
 
 	
 	
 
-    if err := producer.QueueNotification(notification); err != nil {
-        log.Printf("Failed to queue notification: %v", err)
-    }
+    // if err := producer.QueueNotification(notification); err != nil {
+    //     log.Printf("Failed to queue notification: %v", err)
+    // }
 
-    // Keep the application running
-    select {}
+    // // Keep the application running
+    // select {}
 // ---------------------------------------------------------------------------------
 
 	
@@ -118,7 +121,37 @@ func InitServer(cfg *config.Config) {
     //     })
     // })
 
+// مسیر جدید برای ارسال نوتیفیکیشن
+r.POST("/send-notification", func(c *gin.Context) {
+	var req struct {
+		Recipient string `json:"recipient" binding:"required"`
+		Message   string `json:"message" binding:"required"`
+		Type      string `json:"type" binding:"required"`
+	}
 
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Create the notification struct with a pending status
+	notification := &services.Notification{
+		Type:      req.Type,
+		Recipient: req.Recipient,
+		Message:   req.Message,
+		CreatedAt: time.Now(),
+		Status:    "pending",
+	}
+
+	// Queue the notification
+	if err := producer.QueueNotification(notification); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to queue notification"})
+		return
+	}
+
+	// Notification queued successfully
+	c.JSON(http.StatusOK, gin.H{"status": "Notification queued successfully"})
+})
 
 	RegisterValidators()
 	// RegisterPrometheus()
@@ -131,7 +164,7 @@ func InitServer(cfg *config.Config) {
 	RegisterRoutes(r, cfg)
 	RegisterSwagger(r, cfg)
 
-	err = r.Run(fmt.Sprintf(":%s", cfg.Server.InternalPort))
+	err := r.Run(fmt.Sprintf(":%s", cfg.Server.InternalPort))
 	if err != nil {
 		logger.Error(logging.General, logging.Startup, err.Error(), nil)
 	}
