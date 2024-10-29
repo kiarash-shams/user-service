@@ -15,8 +15,8 @@ type ProviderManager struct {
 func NewProviderManager() *ProviderManager {
     return &ProviderManager{
         providers: []SMSProvider{
-            TwilioProvider{},
-            NexmoProvider{},
+            SmsIrProvider{},
+            KavenegarProvider{},
             // Add other providers here
         },
     }

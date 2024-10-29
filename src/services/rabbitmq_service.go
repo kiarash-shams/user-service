@@ -1,11 +1,12 @@
 package services
 
 import (
-    "encoding/json"
-    "fmt"
+	"encoding/json"
+	"fmt"
+
 	"user-service/pkg/logging"
-    "github.com/streadway/amqp"
-  
+
+	"github.com/streadway/amqp"
 )
 
 // RabbitMQService struct to hold connection and channels
@@ -69,6 +70,8 @@ func (rmq *RabbitMQService) PublishMessage(queueName string, message interface{}
     if !ok {
         return fmt.Errorf("queue '%s' not found", queueName)
     }
+
+    
 
     body, err := json.Marshal(message)
     if err != nil {
